@@ -54,7 +54,7 @@ def read_and_write_file(json_in, csv_out, column_names):
     return c
 
 
-def get_superset_of_column_names_from_file(json_in, max_lines = -1):
+def get_superset_of_column_names_from_file(json_in, max_lines = -1, max_depth = -1):
     """Read in the json dataset file and return the superset of column names."""
     column_names = set()
 
@@ -71,13 +71,13 @@ def get_superset_of_column_names_from_file(json_in, max_lines = -1):
 
         line_contents = json.loads(line)
         column_names.update(
-            set(get_column_names(line_contents).keys())
+            set(get_column_names(line_contents, max_depth = max_depth).keys())
         )
 
     return column_names
 
 
-def get_column_names(line_contents, parent_key=''):
+def get_column_names(line_contents, parent_key='', depth = 0, max_depth = -1):
     """Return a list of flattened key names given a dict.
 
     Example:
@@ -98,9 +98,12 @@ def get_column_names(line_contents, parent_key=''):
     for k, v in line_contents.items():
         column_name = "{0}.{1}".format(parent_key, k) if parent_key else k
         if isinstance(v, collections.MutableMapping):
-            column_names.extend(
-                get_column_names(v, column_name).items()
-            )
+            if (max_depth < 0 or depth < max_depth):
+                column_names.extend(
+                    get_column_names(v, parent_key=column_name, depth = depth+1, max_depth=max_depth).items()
+                )
+            else:
+                column_names.append((column_name, v))
         else:
             column_names.append((column_name, v))
     return dict(column_names)
