@@ -26,8 +26,8 @@ if __name__ == '__main__':
 
     tar_file = args.tar_file
     #dest_dir = os.path.join(os.path.dirname(tar_file), tar_file.split('.')[0])
-    #os.makedirs(dest_dir, exist_ok=True)
-    dest_dir = os.getcwd()
+    dest_dir = os.path.join( os.getcwd(), 'yelp-workspace' )
+    os.makedirs(dest_dir, exist_ok=True)
 
     print('Reading TAR file: {0} ...'.format(tar_file))
     print('Output directory: {0}'.format(dest_dir))
