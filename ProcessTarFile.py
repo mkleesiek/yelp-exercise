@@ -25,8 +25,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     tar_file = args.tar_file
-    dest_dir = os.path.join(os.path.dirname(tar_file), tar_file.split('.')[0])
-    os.makedirs(dest_dir, exist_ok=True)
+    #dest_dir = os.path.join(os.path.dirname(tar_file), tar_file.split('.')[0])
+    #os.makedirs(dest_dir, exist_ok=True)
+    dest_dir = os.getcwd()
 
     print('Reading TAR file: {0} ...'.format(tar_file))
     print('Output directory: {0}'.format(dest_dir))
@@ -45,7 +46,7 @@ if __name__ == '__main__':
         json_file = tar.extractfile(member)
 
         csv_file = os.path.join(dest_dir, '{0}.csv'.format(base))
-        column_names = JsonToCsvConverter.get_superset_of_column_names_from_file(json_file, 1000, 1)
+        column_names = JsonToCsvConverter.get_superset_of_column_names_from_file(json_file, 1000, 2)
         json_file.seek(0)
         number_of_lines = JsonToCsvConverter.read_and_write_file(json_file, csv_file, column_names)
         print('  {0} lines written to {1}.csv.'.format(number_of_lines, base))

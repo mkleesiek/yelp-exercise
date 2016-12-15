@@ -96,7 +96,7 @@ def get_column_names(line_contents, parent_key='', depth = 0, max_depth = -1):
     """
     column_names = []
     for k, v in line_contents.items():
-        column_name = "{0}_{1}".format(parent_key, k) if parent_key else k
+        column_name = "{0}.{1}".format(parent_key, k) if parent_key else k
         if isinstance(v, collections.MutableMapping):
             if (max_depth < 0 or depth < max_depth):
                 column_names.extend(
