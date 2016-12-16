@@ -25,13 +25,16 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     tar_file = args.tar_file
+
+    # setup the target directory
     #dest_dir = os.path.join(os.path.dirname(tar_file), tar_file.split('.')[0])
-    dest_dir = os.path.join( os.getcwd(), 'yelp-workspace' )
+    dest_dir = os.path.join( os.getcwd(), 'scratch' )
     os.makedirs(dest_dir, exist_ok=True)
 
     print('Reading TAR file: {0} ...'.format(tar_file))
     print('Output directory: {0}'.format(dest_dir))
 
+    # loop over all TAR entries with .json extension
     tar = tarfile.open(tar_file)
     for member in tar.getmembers():
 
@@ -46,8 +49,14 @@ if __name__ == '__main__':
         json_file = tar.extractfile(member)
 
         csv_file = os.path.join(dest_dir, '{0}.csv'.format(base))
+
+        # scan the first 1000 lines to construct the column names (attribute depth = 2)
         column_names = JsonToCsvConverter.get_superset_of_column_names_from_file(json_file, 1000, 2)
+
+        # reset the file stream pointer
         json_file.seek(0)
+
+        # now read the file line by line and convert JSON objects to CSV rows
         number_of_lines = JsonToCsvConverter.read_and_write_file(json_file, csv_file, column_names)
         print('  {0} lines written to {1}.csv.'.format(number_of_lines, base))
 
