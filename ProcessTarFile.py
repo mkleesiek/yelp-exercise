@@ -19,12 +19,16 @@ if __name__ == '__main__':
     parser.add_argument(
         'tar_file',
         type=str,
+        nargs='?',
+        default='yelp.tar',
         help='The TAR file to convert.'
     )
 
     args = parser.parse_args()
 
     tar_file = args.tar_file
+    if not os.path.isfile(tar_file):
+        sys.exit('Could not find input TAR file {0}!'.format(tar_file))
 
     # setup the target directory
     #dest_dir = os.path.join(os.path.dirname(tar_file), tar_file.split('.')[0])
