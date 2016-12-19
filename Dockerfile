@@ -20,6 +20,7 @@ RUN conda install --quiet --yes \
     'scipy=0.17*' \
     'seaborn=0.7*' \
     'scikit-learn=0.18*' \
+    'simplejson=3.*' \
     && \
     conda remove --quiet --yes --force qt pyqt && \
     conda clean -tipsy
@@ -32,4 +33,19 @@ ENV XDG_CACHE_HOME /home/$NB_USER/.cache/
 RUN MPLBACKEND=Agg python3 -c "import matplotlib.pyplot"
 
 # Add project files
-COPY JsonToCsvConverter.py ProcessTarFile.py YelpAnalysis.ipynb /
+COPY JsonToCsvConverter.py ProcessTarFile.py YelpAnalysis.ipynb startup.sh $HOME/work/
+
+# Make the entry script executable
+USER root
+RUN chmod +x $HOME/work/startup.sh
+USER $NB_USER
+
+# Expose Jupyter webinterface port
+EXPOSE 8888
+
+# Set working directory
+WORKDIR $HOME/work
+
+# Start default script through tini
+ENTRYPOINT ["tini", "--"]
+CMD ["./startup.sh"]
