@@ -32,8 +32,12 @@ If you prefer to perform these 2 steps manually, start the container with:
 ```
 docker run --rm -it -p [JUPYTER_PORT]:8888 -v [YELP_DOWNLOAD_DIR]/yelp_dataset_challenge_academic_dataset.tar:/yelp.tar mkleesiek:yelp /bin/bash
 ```
-Then execute
+Within the container execute:
 ```
 python3 ProcessTarFile.py /yelp.tar
 start-notebook.sh
 ```
+
+Finally, start a webbrowser (on your host) and visit the container's jupyter notebook: [http://localhost:8888/notebooks/YelpAnalysis.ipynb](http://localhost:8888/notebooks/YelpAnalysis.ipynb)
+
+You might need to adjust the published port number 8888 to [JUPYTER_PORT] here.
